@@ -1679,10 +1679,10 @@
             }
 
             // Succès
-            contactForm.style.display = 'none';
+            document.querySelectorAll('.form-group, .form-row, .btn-submit').forEach(el => {
+          el.style.display = 'none';});
             formSuccess.style.display = 'block';
-            formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        });
+            formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });});
 
         // Retirer la bordure rouge à la saisie
         document.querySelectorAll('.form-group input, .form-group textarea').forEach(el => {
