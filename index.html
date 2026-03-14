@@ -1489,213 +1489,201 @@
        JAVASCRIPT
   ============================================================ -->
   <script>
-    /* --------------------------------------------------------
-       NAV — Scroll effect + hamburger
-    -------------------------------------------------------- */
-    const navbar     = document.getElementById('navbar');
-    const hamburger  = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobileMenu');
+        /* --------------------------------------------------------
+        NAV — Scroll effect + hamburger
+        -------------------------------------------------------- */
+        const navbar     = document.getElementById('navbar');
+        const hamburger  = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
 
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 60);
-    });
+        window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 60);
+        });
 
-    hamburger.addEventListener('click', () => {
-      const isOpen = mobileMenu.classList.toggle('open');
-      hamburger.classList.toggle('open', isOpen);
-      hamburger.setAttribute('aria-expanded', isOpen);
-      document.body.style.overflow = isOpen ? 'hidden' : '';
-    });
+        hamburger.addEventListener('click', () => {
+        const isOpen = mobileMenu.classList.toggle('open');
+        hamburger.classList.toggle('open', isOpen);
+        hamburger.setAttribute('aria-expanded', isOpen);
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+        });
 
-    function closeMobileMenu() {
-      mobileMenu.classList.remove('open');
-      hamburger.classList.remove('open');
-      hamburger.setAttribute('aria-expanded', false);
-      document.body.style.overflow = '';
-    }
-
-    /* --------------------------------------------------------
-       TYPING EFFECT — Hero subtitle
-    -------------------------------------------------------- */
-    const phrases = [
-      'Développeur Full Stack',
-      'Architecte d\'interfaces',
-      'Passionné de performance',
-      'Créateur de produits'
-    ];
-    let pIdx = 0, cIdx = 0, isDeleting = false;
-    const typingEl = document.getElementById('typingText');
-
-    function typeLoop() {
-      const current = phrases[pIdx];
-      typingEl.textContent = isDeleting
-        ? current.substring(0, cIdx--)
-        : current.substring(0, cIdx++);
-
-      let delay = isDeleting ? 55 : 90;
-
-      if (!isDeleting && cIdx > current.length) {
-        delay = 2200;
-        isDeleting = true;
-      } else if (isDeleting && cIdx < 0) {
-        isDeleting = false;
-        pIdx = (pIdx + 1) % phrases.length;
-        delay = 400;
-      }
-      setTimeout(typeLoop, delay);
-    }
-    setTimeout(typeLoop, 900);
-
-    /* --------------------------------------------------------
-       INTERSECTION OBSERVER — Reveal on scroll
-    -------------------------------------------------------- */
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          revealObserver.unobserve(entry.target);
+        function closeMobileMenu() {
+        mobileMenu.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', false);
+        document.body.style.overflow = '';
         }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+        /* --------------------------------------------------------
+        TYPING EFFECT — Hero subtitle
+        -------------------------------------------------------- */
+        const phrases = [
+        'Développeur Full Stack',
+        'Architecte d\'interfaces',
+        'Passionné de performance',
+        'Créateur de produits'
+        ];
+        let pIdx = 0, cIdx = 0, isDeleting = false;
+        const typingEl = document.getElementById('typingText');
 
-    /* Immediately reveal hero elements */
-    document.querySelectorAll('#hero .reveal').forEach(el => {
-      setTimeout(() => el.classList.add('visible'), 100);
-    });
+        function typeLoop() {
+        const current = phrases[pIdx];
+        typingEl.textContent = isDeleting
+            ? current.substring(0, cIdx--)
+            : current.substring(0, cIdx++);
 
-    /* --------------------------------------------------------
-       SKILL BARS — Animate when visible
-    -------------------------------------------------------- */
-    const barObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.querySelectorAll('.skill-fill').forEach(bar => {
-            const w = bar.dataset.width;
-            setTimeout(() => { bar.style.width = w + '%'; }, 200);
-          });
-          barObserver.unobserve(entry.target);
+        let delay = isDeleting ? 55 : 90;
+
+        if (!isDeleting && cIdx > current.length) {
+            delay = 2200;
+            isDeleting = true;
+        } else if (isDeleting && cIdx < 0) {
+            isDeleting = false;
+            pIdx = (pIdx + 1) % phrases.length;
+            delay = 400;
         }
-      });
-    }, { threshold: 0.3 });
-
-    document.querySelectorAll('.skill-category').forEach(cat => barObserver.observe(cat));
-
-    /* --------------------------------------------------------
-       STATS COUNTER — Animated numbers
-    -------------------------------------------------------- */
-    const statObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const el     = entry.target;
-          const target = +el.dataset.target;
-          const suffix = el.querySelector('span')?.outerHTML || '';
-          const duration = 1600;
-          const step = Math.ceil(target / (duration / 16));
-          let current = 0;
-
-          const tick = () => {
-            current = Math.min(current + step, target);
-            el.innerHTML = current + suffix;
-            if (current < target) requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
-          statObserver.unobserve(el);
+        setTimeout(typeLoop, delay);
         }
-      });
-    }, { threshold: 0.5 });
+        setTimeout(typeLoop, 900);
 
-    document.querySelectorAll('.stat-number[data-target]').forEach(el => statObserver.observe(el));
+        /* --------------------------------------------------------
+        INTERSECTION OBSERVER — Reveal on scroll
+        -------------------------------------------------------- */
+        const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            revealObserver.unobserve(entry.target);
+            }
+        });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-    /* --------------------------------------------------------
-       CONTACT FORM
-       TODO: Connecter à Supabase
-       Exemple d'intégration Supabase :
-       ---
-       import { createClient } from '@supabase/supabase-js'
-       const supabase = createClient('YOUR_SUPABASE_URL', 'YOUR_ANON_KEY')
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-       async function saveContact({ name, email, subject, message }) {
-         const { error } = await supabase
-           .from('contact_messages')
-           .insert([{ name, email, subject, message, created_at: new Date() }])
-         if (error) throw error
-       }
-       ---
-    -------------------------------------------------------- */
+        /* Immediately reveal hero elements */
+        document.querySelectorAll('#hero .reveal').forEach(el => {
+        setTimeout(() => el.classList.add('visible'), 100);
+        });
+
+        /* --------------------------------------------------------
+        SKILL BARS — Animate when visible
+        -------------------------------------------------------- */
+        const barObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+            entry.target.querySelectorAll('.skill-fill').forEach(bar => {
+                const w = bar.dataset.width;
+                setTimeout(() => { bar.style.width = w + '%'; }, 200);
+            });
+            barObserver.unobserve(entry.target);
+            }
+        });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.skill-category').forEach(cat => barObserver.observe(cat));
+
+        /* --------------------------------------------------------
+        STATS COUNTER — Animated numbers
+        -------------------------------------------------------- */
+        const statObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+            const el     = entry.target;
+            const target = +el.dataset.target;
+            const suffix = el.querySelector('span')?.outerHTML || '';
+            const duration = 1600;
+            const step = Math.ceil(target / (duration / 16));
+            let current = 0;
+
+            const tick = () => {
+                current = Math.min(current + step, target);
+                el.innerHTML = current + suffix;
+                if (current < target) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+            statObserver.unobserve(el);
+            }
+        });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-number[data-target]').forEach(el => statObserver.observe(el));
+
+        /* --------------------------------------------------------
+        CONTACT FORM
+        TODO: Connecter à Supabase
+        Exemple d'intégration Supabase :
+        ---
+        import { createClient } from '@supabase/supabase-js'
+        const supabase = createClient('YOUR_SUPABASE_URL', 'YOUR_ANON_KEY')
+
+        async function saveContact({ name, email, subject, message }) {
+            const { error } = await supabase
+            .from('contact_messages')
+            .insert([{ name, email, subject, message, created_at: new Date() }])
+            if (error) throw error
+        }
+        ---
+        -------------------------------------------------------- */
     </script>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-    // ✅ Clés publiques — sûres à exposer côté client
-    const SUPABASE_URL  = 'https://kyjayijhyoyluyfmkpjj.supabase.co' ;
-    const SUPABASE_ANON = 'sb_publishable_0h1pB9L-H8ZqXSjw-o_uYQ_zv1HwhTo';
+        // ✅ Clés publiques — sûres à exposer côté client
+        const SUPABASE_URL  = 'https://kyjayijhyoyluyfmkpjj.supabase.co' ;
+        const SUPABASE_ANON = 'sb_publishable_0h1pB9L-H8ZqXSjw-o_uYQ_zv1HwhTo';
 
-    const { createClient } = supabase;
-    const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+        const { createClient } = supabase;
+        const db = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-    const contactForm = document.getElementById('contactForm');
-    const submitBtn   = document.getElementById('submitBtn');
-    const formSuccess = document.getElementById('formSuccess');
+        const contactForm = document.getElementById('contactForm');
+        const submitBtn   = document.getElementById('submitBtn');
+        const formSuccess = document.getElementById('formSuccess');
 
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-        // Validation basique
-        const fields = ['name', 'email', 'subject', 'message'];
-        let valid = true;
-        fields.forEach(f => {
-        const el = document.getElementById(f);
-        if (!el.value.trim()) { el.style.borderColor = '#f87171'; valid = false; }
-        else { el.style.borderColor = ''; }
+            // Validation basique
+            const fields = ['name', 'email', 'subject', 'message'];
+            let valid = true;
+            fields.forEach(f => {
+            const el = document.getElementById(f);
+            if (!el.value.trim()) { el.style.borderColor = '#f87171'; valid = false; }
+            else { el.style.borderColor = ''; }
+            });
+            if (!valid) return;
+
+            // Loading
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+
+            const { error } = await db
+            .from('contact_messages')
+            .insert([{
+                name:    document.getElementById('name').value.trim(),
+                email:   document.getElementById('email').value.trim(),
+                subject: document.getElementById('subject').value.trim(),
+                message: document.getElementById('message').value.trim(),
+            }]);
+
+            submitBtn.classList.remove('loading');
+
+            if (error) {
+            submitBtn.disabled = false;
+            alert('Erreur lors de l\'envoi : ' + error.message);
+            return;
+            }
+
+            // Succès
+            contactForm.style.display = 'none';
+            formSuccess.style.display = 'block';
         });
-        if (!valid) return;
 
-        // Loading
-        submitBtn.classList.add('loading');
-        submitBtn.disabled = true;
+        // Retirer la bordure rouge à la saisie
+        document.querySelectorAll('.form-group input, .form-group textarea').forEach(el => {
+            el.addEventListener('input', () => { el.style.borderColor = ''; });
+        });
 
-        const { error } = await db
-        .from('contact_messages')
-        .insert([{
-            name:    document.getElementById('name').value.trim(),
-            email:   document.getElementById('email').value.trim(),
-            subject: document.getElementById('subject').value.trim(),
-            message: document.getElementById('message').value.trim(),
-        }]);
-
-        submitBtn.classList.remove('loading');
-
-        if (error) {
-        submitBtn.disabled = false;
-        alert('Erreur lors de l\'envoi : ' + error.message);
-        return;
-        }
-
-        // Succès
-        contactForm.style.display = 'none';
-        formSuccess.style.display = 'block';
-    });
-
-    // Retirer la bordure rouge à la saisie
-    document.querySelectorAll('.form-group input, .form-group textarea').forEach(el => {
-        el.addEventListener('input', () => { el.style.borderColor = ''; });
-    });
-
-    document.getElementById('year').textContent = new Date().getFullYear();
+        document.getElementById('year').textContent = new Date().getFullYear();
     </script>
-
-
-
-
-
-
-
-
-
-
-
-  </script>
 </body>
 </html>
